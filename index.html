@@ -1,0 +1,131 @@
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.2/chroma.min.js" integrity="sha512-8TVPS0EFkkmtT6yPb5K4csnSt3tjbKRrs0F8gvTNKv2OxOcwDO7+Klkz86gMVrzfqtZos5N2a+k+r9D+hlccmQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <style>
+
+            body
+            {
+                background-color: #999;
+            }
+
+            .colorpick_dialog
+            {
+                --width:512px;
+                --width-hue:30px;
+                --height:256px;
+                --pad:10px;
+
+                background-color: #222;
+
+                width:calc(var(--width) + 3*var(--pad) + var(--width-hue));
+                height:calc(var(--height) + 20px);
+                position: absolute;
+            }
+
+            .colorpick_area
+            {
+                width:var(--width);
+                height:var(--height);
+                left:var(--pad);
+                top:var(--pad);
+                background: linear-gradient(to right, rgb(255, 255, 255), rgb(0, 255, 11));
+                position: absolute;
+            }
+
+            .brightness
+            {
+                background: linear-gradient(hsla(0,0%,100%,0),#000);
+                width:100%;
+                height:100%;
+            }
+
+            .hue
+            {
+                top:var(--pad);
+                background:linear-gradient(red,#f0f 17%,#00f 34%,#0ff 50%,#0f0 67%,#ff0 84%,red);
+                height:var(--height);
+
+                width:var(--width-hue);
+                position: absolute;
+                left:calc(var(--width) + var(--pad) + var(--pad));
+            }
+
+            .colorpick_preview
+            {
+                position: absolute;
+                width:50px;
+                height:50px;
+                top:300px;
+                border: 5px solid #222;
+
+            }
+
+            .colorpick_cursor
+            {
+                width:6px;
+                height:6px;
+                border:1px solid white;
+                position: absolute;
+                pointer-events: none;
+                border-radius: 100%;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="colorpick_dialog">
+            <div id="colorpick_area" class="colorpick_area">
+                <div id="colorpick_cursor" class="colorpick_cursor"></div>
+
+                <div class="brightness" >
+                </div>
+            </div>
+
+            <div id="hue" class="hue"></div>
+        </div>
+
+        <div id="colorpick_preview" class="colorpick_preview"></div>
+
+        <script>
+
+            let hue=0;
+
+
+            document.getElementById("hue").addEventListener("pointermove",(e)=>
+            {
+                if(e.buttons==1)
+                {
+                    const g=1.0-(e.offsetY/256);
+
+                    hue=g*360;
+                    const rgb=chroma(hue, 1, 0.5, 'hsl').rgb();
+                    document.getElementById("colorpick_area").style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb[0]+", "+rgb[1]+", "+rgb[2]+"))"
+                }
+            });
+
+            document.getElementById("colorpick_area").addEventListener("pointermove",(e)=>
+            {
+                if(e.buttons==1)
+                {
+
+                    const l=1.0-(e.offsetY/256);
+                    const b=(e.offsetX/512);
+
+                    document.getElementById("colorpick_cursor").style.marginLeft=e.offsetX-4+"px";
+                    document.getElementById("colorpick_cursor").style.marginTop=e.offsetY-4+"px";
+
+                    if(l>0.5)document.getElementById("colorpick_cursor").style.borderColor="black";
+                    else document.getElementById("colorpick_cursor").style.borderColor="white";
+
+                    const col=chroma(hue, b, l, 'hsv');
+
+                    colorpick_preview.style.backgroundColor=col.hex();
+
+                }
+            });
+
+        </script>
+
+    </body>
+
+</html>
