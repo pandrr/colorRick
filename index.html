@@ -20,6 +20,8 @@
                 width:calc(var(--width) + 3*var(--pad) + var(--width-hue));
                 height:calc(var(--height) + 20px);
                 position: absolute;
+                border-radius: 10px;;
+
             }
 
             .colorpick_area
@@ -32,14 +34,15 @@
                 position: absolute;
             }
 
-            .brightness
+            .colorpick_brightness
             {
                 background: linear-gradient(hsla(0,0%,100%,0),#000);
                 width:100%;
                 height:100%;
+                pointer-events: none;
             }
 
-            .hue
+            .colorpick_hue
             {
                 top:var(--pad);
                 background:linear-gradient(red,#f0f 17%,#00f 34%,#0ff 50%,#0f0 67%,#ff0 84%,red);
@@ -57,7 +60,6 @@
                 height:50px;
                 top:300px;
                 border: 5px solid #222;
-
             }
 
             .colorpick_cursor
@@ -73,56 +75,83 @@
     </head>
     <body>
 
-        <div class="colorpick_dialog">
-            <div id="colorpick_area" class="colorpick_area">
-                <div id="colorpick_cursor" class="colorpick_cursor"></div>
-
-                <div class="brightness" >
-                </div>
-            </div>
-
-            <div id="hue" class="hue"></div>
-        </div>
-
-        <div id="colorpick_preview" class="colorpick_preview"></div>
 
         <script>
 
             let hue=0;
 
 
-            document.getElementById("hue").addEventListener("pointermove",(e)=>
+            ColorRick = class // extends CABLES.EventTarget
             {
-                if(e.buttons==1)
+                constructor()
                 {
-                    const g=1.0-(e.offsetY/256);
+                    // super();
 
-                    hue=g*360;
-                    const rgb=chroma(hue, 1, 0.5, 'hsl').rgb();
-                    document.getElementById("colorpick_area").style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb[0]+", "+rgb[1]+", "+rgb[2]+"))"
+                    this._elContainer = document.createElement("div");
+                    this._elContainer.classList.add("colorpick_dialog");
+                    document.body.appendChild(this._elContainer);
+
+                    this._elArea = document.createElement("div");
+                    this._elArea.classList.add("colorpick_area");
+                    this._elContainer.appendChild(this._elArea);
+
+
+                    this._elAreaCursor = document.createElement("div");
+                    this._elAreaCursor.classList.add("colorpick_cursor");
+                    this._elArea.appendChild(this._elAreaCursor);
+
+                    this._elBrightness = document.createElement("div");
+                    this._elBrightness.classList.add("colorpick_brightness");
+                    this._elArea.appendChild(this._elBrightness);
+
+
+                    this._elHue = document.createElement("div");
+                    this._elHue.classList.add("colorpick_hue");
+                    this._elContainer.appendChild(this._elHue);
+
+                    this._elColorBox = document.createElement("div");
+                    this._elColorBox.classList.add("colorpick_preview");
+                    this._elContainer.appendChild(this._elColorBox);
+
+
+                    this._elHue.addEventListener("pointermove",(e)=>
+                    {
+                        if(e.buttons==1)
+                        {
+                            const g=1.0-(e.offsetY/256);
+
+                            hue=g*360;
+                            const rgb=chroma(hue, 1, 0.5, 'hsl').rgb();
+                            this._elArea.style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb[0]+", "+rgb[1]+", "+rgb[2]+"))"
+                        }
+                    });
+
+                    this._elArea.addEventListener("pointermove",(e)=>
+                    {
+                        if(e.buttons==1)
+                        {
+
+                            const l=1.0-(e.offsetY/256);
+                            const b=(e.offsetX/512);
+
+                            this._elAreaCursor.style.marginLeft=e.offsetX-4+"px";
+                            this._elAreaCursor.style.marginTop=e.offsetY-4+"px";
+
+                            if(l>0.5)this._elAreaCursor.style.borderColor="black";
+                            else this._elAreaCursor.style.borderColor="white";
+
+                            const col=chroma(hue, b, l, 'hsv');
+
+                            this._elColorBox.style.backgroundColor=col.hex();
+
+                        }
+                    });
                 }
-            });
 
-            document.getElementById("colorpick_area").addEventListener("pointermove",(e)=>
-            {
-                if(e.buttons==1)
-                {
+            };
 
-                    const l=1.0-(e.offsetY/256);
-                    const b=(e.offsetX/512);
+            const cr=new ColorRick();
 
-                    document.getElementById("colorpick_cursor").style.marginLeft=e.offsetX-4+"px";
-                    document.getElementById("colorpick_cursor").style.marginTop=e.offsetY-4+"px";
-
-                    if(l>0.5)document.getElementById("colorpick_cursor").style.borderColor="black";
-                    else document.getElementById("colorpick_cursor").style.borderColor="white";
-
-                    const col=chroma(hue, b, l, 'hsv');
-
-                    colorpick_preview.style.backgroundColor=col.hex();
-
-                }
-            });
 
         </script>
 
