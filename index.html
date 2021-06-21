@@ -76,6 +76,15 @@
     <body>
 
 
+        <br/><br/><br/>
+        <div onclick="new ColorRick({ele:this,color:'#ff0000'});">hello!</div>
+        <br/><br/><br/>
+        <div onclick="new ColorRick({ele:this,color:'#00ff00'});">hello!</div>
+
+        <br/><br/><br/><br/><br/>
+
+
+
         <script>
 
             let hue=0;
@@ -83,46 +92,74 @@
 
             ColorRick = class // extends CABLES.EventTarget
             {
-                constructor()
+                constructor(options)
                 {
+                    this._elements=[];
                     // super();
+
+                    this.options=options;
 
                     this._elContainer = document.createElement("div");
                     this._elContainer.classList.add("colorpick_dialog");
                     document.body.appendChild(this._elContainer);
+                    this._elements.push(this._elContainer);
 
                     this._elArea = document.createElement("div");
                     this._elArea.classList.add("colorpick_area");
                     this._elContainer.appendChild(this._elArea);
+                    this._elements.push(this._elArea);
 
 
                     this._elAreaCursor = document.createElement("div");
                     this._elAreaCursor.classList.add("colorpick_cursor");
                     this._elArea.appendChild(this._elAreaCursor);
+                    this._elements.push(this._elAreaCursor);
+
 
                     this._elBrightness = document.createElement("div");
                     this._elBrightness.classList.add("colorpick_brightness");
                     this._elArea.appendChild(this._elBrightness);
+                    this._elements.push(this._elBrightness);
 
 
                     this._elHue = document.createElement("div");
                     this._elHue.classList.add("colorpick_hue");
                     this._elContainer.appendChild(this._elHue);
+                    this._elements.push(this._elHue);
 
                     this._elColorBox = document.createElement("div");
                     this._elColorBox.classList.add("colorpick_preview");
                     this._elContainer.appendChild(this._elColorBox);
+                    this._elements.push(this._elColorBox);
+
+                    this._color=chroma("white");
+
+                    if(this.options.ele)
+                    {
+                        const r=this.options.ele.getBoundingClientRect();
+                        this._elContainer.style.top=r.y;
+                        this._elContainer.style.left=r.x;
+                    }
+
+                    if(this.options.color)
+                    {
+                        this._color=chroma(this.options.color);
+
+                    }
+
+                    this.updateColorField();
 
 
                     this._elHue.addEventListener("pointermove",(e)=>
                     {
                         if(e.buttons==1)
                         {
-                            const g=1.0-(e.offsetY/256);
+                            const h=1.0-(e.offsetY/256);
+                            const rgb=chroma(h*360, 1, 0.5, 'hsl').rgb();
+                            
 
-                            hue=g*360;
-                            const rgb=chroma(hue, 1, 0.5, 'hsl').rgb();
                             this._elArea.style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb[0]+", "+rgb[1]+", "+rgb[2]+"))"
+                            this.updateColorField();
                         }
                     });
 
@@ -146,11 +183,45 @@
 
                         }
                     });
+
+                    document.addEventListener("pointerdown",this._clickOutside.bind(this));
                 }
 
-            };
+                _clickOutside(e)
+                {
+                    for(let i=0;i<this._elements.length;i++)
+                    {
+                        if(e.target==this._elements[i])
+                        {
+                            console.log("bla");
+                            return;
+                        }
+                    }
 
-            const cr=new ColorRick();
+                    this.close();
+                }
+
+                setColor(c)
+                {
+                    this._rgb=chroma(hue, 1, 0.5, 'hsl').rgb();
+                }
+
+                updateColorField()
+                {
+                    this._elColorBox.style.backgroundColor=this._color.hex();
+                }
+
+                close()
+                {
+                    document.removeEventListener("pointerdown",this._clickOutside.bind(this));
+
+                    for(let i=0;i<this._elements.length;i++)
+                    {
+                        this._elements[i].remove();
+                    }
+                    
+                }
+            };
 
 
         </script>
