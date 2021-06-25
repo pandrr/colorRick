@@ -1,6 +1,8 @@
 <html>
     <head>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.2/chroma.min.js" integrity="sha512-8TVPS0EFkkmtT6yPb5K4csnSt3tjbKRrs0F8gvTNKv2OxOcwDO7+Klkz86gMVrzfqtZos5N2a+k+r9D+hlccmQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.2/chroma.min.js" integrity="sha512-8TVPS0EFkkmtT6yPb5K4csnSt3tjbKRrs0F8gvTNKv2OxOcwDO7+Klkz86gMVrzfqtZos5N2a+k+r9D+hlccmQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+        <script src="chroma.js"></script>
+
         <style>
 
             body
@@ -71,6 +73,37 @@
                 pointer-events: none;
                 border-radius: 100%;
             }
+
+            .colorpick_cursor_hue
+            {
+                position: absolute;
+                width:30px;
+                height:1px;
+                border:1px solid white;
+                position: absolute;
+                pointer-events: none;
+
+            }
+
+            .colorpick_inputcontainer
+            {
+                position: absolute;
+                width:200px;
+                height:100px;
+                top:300px;
+                left:100px;
+                /* border: 5px solid #f00; */
+                background-color: #222;
+                padding:10px;
+            }
+
+            .colorpick_input
+            {
+                background-color: #444;
+                border:1px solid #888;
+                color:white;
+            }
+
         </style>
     </head>
     <body>
@@ -80,6 +113,9 @@
         <div onclick="new ColorRick({ele:this,color:'#ff0000'});">hello!</div>
         <br/><br/><br/>
         <div onclick="new ColorRick({ele:this,color:'#00ff00'});">hello!</div>
+
+        <br/><br/><br/>
+        <div onclick="new ColorRick({ele:this,color:'#77aa55'});">hello!</div>
 
         <br/><br/><br/><br/><br/>
 
@@ -99,6 +135,9 @@
 
                     this.options=options;
 
+                    this._areaWidth=512;
+                    this._areaHeight=256;
+
                     this._elContainer = document.createElement("div");
                     this._elContainer.classList.add("colorpick_dialog");
                     document.body.appendChild(this._elContainer);
@@ -109,12 +148,13 @@
                     this._elContainer.appendChild(this._elArea);
                     this._elements.push(this._elArea);
 
-
                     this._elAreaCursor = document.createElement("div");
                     this._elAreaCursor.classList.add("colorpick_cursor");
                     this._elArea.appendChild(this._elAreaCursor);
                     this._elements.push(this._elAreaCursor);
-
+                    
+                    
+                    
 
                     this._elBrightness = document.createElement("div");
                     this._elBrightness.classList.add("colorpick_brightness");
@@ -127,10 +167,28 @@
                     this._elContainer.appendChild(this._elHue);
                     this._elements.push(this._elHue);
 
+                    this._elHueCursor = document.createElement("div");
+                    this._elHueCursor.classList.add("colorpick_cursor_hue");
+                    this._elHue.appendChild(this._elHueCursor);
+                    this._elements.push(this._elHueCursor);
+
+
                     this._elColorBox = document.createElement("div");
                     this._elColorBox.classList.add("colorpick_preview");
                     this._elContainer.appendChild(this._elColorBox);
                     this._elements.push(this._elColorBox);
+
+                    this._elInputContainer = document.createElement("div");
+                    this._elInputContainer.classList.add("colorpick_inputcontainer");
+                    this._elContainer.appendChild(this._elInputContainer);
+                    this._elements.push(this._elInputContainer);
+
+
+                    this._inputHex = document.createElement("input");
+                    this._inputHex.classList.add("colorpick_input");
+                    // this._inputHex.classList.add("colorpick_input_hex");
+                    this._elInputContainer.appendChild(this._inputHex);
+                    this._elements.push(this._inputHex);
 
                     this._color=chroma("white");
 
@@ -143,7 +201,8 @@
 
                     if(this.options.color)
                     {
-                        this._color=chroma(this.options.color);
+                        this.setColor(this.options.color);
+                        
 
                     }
 
@@ -155,11 +214,12 @@
                         if(e.buttons==1)
                         {
                             const h=1.0-(e.offsetY/256);
-                            const rgb=chroma(h*360, 1, 0.5, 'hsl').rgb();
                             
+                            this._color=chroma(h*360, 1, 0.5, 'hsv');
+                            this._hue=h*360;
 
-                            this._elArea.style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb[0]+", "+rgb[1]+", "+rgb[2]+"))"
                             this.updateColorField();
+
                         }
                     });
 
@@ -167,19 +227,17 @@
                     {
                         if(e.buttons==1)
                         {
+                            const l=1.0-(e.offsetY/this._areaHeight);
+                            const b=(e.offsetX/this._areaWidth);
 
-                            const l=1.0-(e.offsetY/256);
-                            const b=(e.offsetX/512);
+                            // this._elAreaCursor.style.marginLeft=e.offsetX-4+"px";
+                            // this._elAreaCursor.style.marginTop=e.offsetY-4+"px";
 
-                            this._elAreaCursor.style.marginLeft=e.offsetX-4+"px";
-                            this._elAreaCursor.style.marginTop=e.offsetY-4+"px";
+                            this._color=chroma(this._hue, b, l, 'hsl');
 
-                            if(l>0.5)this._elAreaCursor.style.borderColor="black";
-                            else this._elAreaCursor.style.borderColor="white";
+                            // this._elColorBox.style.backgroundColor=col.hex();
 
-                            const col=chroma(hue, b, l, 'hsv');
-
-                            this._elColorBox.style.backgroundColor=col.hex();
+                            this.updateColorField()
 
                         }
                     });
@@ -203,12 +261,30 @@
 
                 setColor(c)
                 {
-                    this._rgb=chroma(hue, 1, 0.5, 'hsl').rgb();
+                    this._color=chroma(c);
+                    this._hue=this._color.hsv()[0];
+                    this.updateColorField();
+                }
+
+                updateCursors()
+                {
+
+                    if(this._color.hsv()[2]>0.5)this._elAreaCursor.style.borderColor="black";
+                    else this._elAreaCursor.style.borderColor="white";
+
+                    this._elHueCursor.style.top=(this._areaHeight-(this._hue/360*this._areaHeight))+"px";
+                    this._elAreaCursor.style.marginLeft=(this._color.hsv()[1]*this._areaWidth-4)+"px";
+                    this._elAreaCursor.style.marginTop=(this._areaHeight-(this._color.hsv()[2]*this._areaHeight)-4)+"px";
                 }
 
                 updateColorField()
                 {
+                    const rgb=this._color.rgb();
+                    this._elArea.style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb[0]+", "+rgb[1]+", "+rgb[2]+"))"
+
                     this._elColorBox.style.backgroundColor=this._color.hex();
+                    this._inputHex.value=this._color.hex();
+                    this.updateCursors();
                 }
 
                 close()
