@@ -12,17 +12,19 @@
 
             .colorpick_dialog
             {
-                --width:512px;
-                --width-hue:30px;
+                --width:256px;
                 --height:256px;
+                --width-hue:30px;
                 --pad:10px;
+                
 
                 background-color: #222;
 
                 width:calc(var(--width) + 3*var(--pad) + var(--width-hue));
-                height:calc(var(--height) + 20px);
+                height:444px;
                 position: absolute;
-                border-radius: 10px;;
+                border-radius: 10px;
+                overflow: hidden;
 
             }
 
@@ -58,16 +60,22 @@
             .colorpick_preview
             {
                 position: absolute;
-                width:50px;
-                height:50px;
-                top:300px;
-                border: 5px solid #222;
+                width:192px;
+                height:30px;
+                top:276px;
+                margin-left:74px;
+            }
+
+            .colorpick_preview_orig
+            {
+                margin-left:10px;
+                width:64px;
             }
 
             .colorpick_cursor
             {
-                width:6px;
-                height:6px;
+                width:4px;
+                height:4px;
                 border:1px solid white;
                 position: absolute;
                 pointer-events: none;
@@ -77,24 +85,26 @@
             .colorpick_cursor_hue
             {
                 position: absolute;
-                width:30px;
-                height:1px;
-                border:1px solid white;
+                width:34px;
+                margin-left: -2px;
+                height:0px;
+                border-top:1px solid white;
                 position: absolute;
                 pointer-events: none;
-
             }
 
             .colorpick_inputcontainer
             {
                 position: absolute;
                 width:200px;
-                height:100px;
-                top:300px;
-                left:100px;
+                height:300px;
+                top:320px;
+                left:0px;
+                width:100%;
                 /* border: 5px solid #f00; */
-                background-color: #222;
-                padding:10px;
+                background-color: #000;
+                /* padding:10px; */
+                padding-top:20px;
             }
 
             .colorpick_input
@@ -135,7 +145,7 @@
 
                     this.options=options;
 
-                    this._areaWidth=512;
+                    this._areaWidth=256;
                     this._areaHeight=256;
 
                     this._elContainer = document.createElement("div");
@@ -172,11 +182,16 @@
                     this._elHue.appendChild(this._elHueCursor);
                     this._elements.push(this._elHueCursor);
 
-
                     this._elColorBox = document.createElement("div");
                     this._elColorBox.classList.add("colorpick_preview");
                     this._elContainer.appendChild(this._elColorBox);
                     this._elements.push(this._elColorBox);
+
+                    this._elColorBoxOrig = document.createElement("div");
+                    this._elColorBoxOrig.classList.add("colorpick_preview");
+                    this._elColorBoxOrig.classList.add("colorpick_preview_orig");
+                    this._elContainer.appendChild(this._elColorBoxOrig);
+                    this._elements.push(this._elColorBoxOrig);
 
                     this._elInputContainer = document.createElement("div");
                     this._elInputContainer.classList.add("colorpick_inputcontainer");
@@ -203,8 +218,10 @@
                     {
                         this.setColor(this.options.color);
                         
-
+                        
                     }
+
+                    this._elColorBoxOrig.style.backgroundColor=this._color.hex();
 
                     this.updateColorField();
 
@@ -273,8 +290,8 @@
                     else this._elAreaCursor.style.borderColor="white";
 
                     this._elHueCursor.style.top=(this._areaHeight-(this._hue/360*this._areaHeight))+"px";
-                    this._elAreaCursor.style.marginLeft=(this._color.hsv()[1]*this._areaWidth-4)+"px";
-                    this._elAreaCursor.style.marginTop=(this._areaHeight-(this._color.hsv()[2]*this._areaHeight)-4)+"px";
+                    this._elAreaCursor.style.marginLeft=(this._color.hsv()[1]*this._areaWidth-2)+"px";
+                    this._elAreaCursor.style.marginTop=(this._areaHeight-(this._color.hsv()[2]*this._areaHeight)-2)+"px";
                 }
 
                 updateColorField()
