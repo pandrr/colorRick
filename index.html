@@ -10,6 +10,14 @@
                 background-color: #999;
                 font-family: arial;
             }
+            .button
+            {
+                border-radius: 8px;
+                background-color: #333;
+                padding:10px;
+                color:white;
+                display:inline;
+            }
 
             .colorpick_dialog
             {
@@ -108,14 +116,14 @@
 
             .colorpick_inputcontainer, .colorpick_inputcontainer table
             {
-                color:white;
+                color:#999;
             }
 
             .colorpick_input
             {
                 background-color: #444;
                 border:0px solid #888;
-                color:white;
+                color:#ddd;
             }
 
             .colorpick_input_small
@@ -134,6 +142,12 @@
                 width:90%;
             }
 
+            .colorpick_inputcontainer table,.colorpick_inputcontainer table td, .colorpick_inputcontainer table tr
+            {
+                pointer-events: none;
+                user-select: none;
+            }
+
             .colorpick_inputcontainer table td.right
             {
                 text-align: right;
@@ -146,12 +160,12 @@
 
 
         <br/><br/><br/>
-        <div onclick="new ColorRick({ele:this,color:'#ff0000'});">hello!</div>
-        <br/><br/><br/>
-        <div onclick="new ColorRick({ele:this,color:'#00ff00'});">hello!</div>
+        <div class="button" onclick="new ColorRick({ele:this,color:'#ff0000'});">clickme</div>
+        <br/><br/><br/><br/><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<div class="button" onclick="new ColorRick({ele:this,color:'#00ff00'});">clickme</div>
 
-        <br/><br/><br/>
-        <div onclick="new ColorRick({ele:this,color:'#77aa55'});">hello!</div>
+        <br/><br/><br/><br/><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<div class="button" onclick="new ColorRick({ele:this,color:'#77aa55'});">clickme</div>
 
         <br/><br/><br/><br/><br/>
 
@@ -357,7 +371,7 @@
 
                 updateCursors()
                 {
-                    if(this._color.hsv()[2]>0.5)this._elAreaCursor.style.borderColor="black";
+                    if(this._color.luminance()>0.5)this._elAreaCursor.style.borderColor="black";
                     else this._elAreaCursor.style.borderColor="white";
 
                     this._elHueCursor.style.top=(this._areaHeight-(this._hue/360*this._areaHeight))+"px";
