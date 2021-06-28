@@ -17,6 +17,7 @@
                 padding:10px;
                 color:white;
                 display:inline;
+                cursor: pointer;
             }
 
             .colorpick_dialog
@@ -26,15 +27,12 @@
                 --width-hue:30px;
                 --pad:10px;
                 
-
                 background-color: #222;
-
                 width:calc(var(--width) + 3*var(--pad) + var(--width-hue));
                 height:444px;
                 position: absolute;
                 border-radius: 10px;
                 overflow: hidden;
-
             }
 
             .colorpick_area
@@ -85,7 +83,8 @@
             {
                 width:4px;
                 height:4px;
-                border:1px solid white;
+                border:1px solid transparent;
+                background-color: white;
                 position: absolute;
                 pointer-events: none;
                 border-radius: 100%;
@@ -98,6 +97,7 @@
                 margin-left: -2px;
                 height:0px;
                 border-top:1px solid white;
+                border-bottom:1px solid white;
                 position: absolute;
                 pointer-events: none;
             }
@@ -284,7 +284,6 @@
                     this._inputS=document.getElementById("colorpick_input_s");
                     this._inputV=document.getElementById("colorpick_input_v");
 
-
                     this._elements.push(this._inputHex);
                     this._elements.push(this._inputR,this._inputG,this._inputB);
                     this._elements.push(this._inputH,this._inputS,this._inputV);
@@ -309,19 +308,27 @@
                     this.updateColorField();
 
 
+
                     this._elHue.addEventListener("pointermove",(e)=>
                     {
                         if(e.buttons==1)
                         {
                             const y=Math.min(this._areaHeight,Math.max(0,e.offsetY));
 
-                            const h=(1.0-(y/this._areaHeight))*360;
+                            this._hue=(1.0-(y/this._areaHeight))*360;
                             
-                            this._color=chroma(h, 1, 0.5, 'hsv');
-                            this._hue=h;
-
                             this.updateColorField();
                         }
+                    });
+
+                    this._elHue.addEventListener("wheel",(e)=>
+                    {
+                        const speed=0.1;
+                        
+                        if(e.deltaY>0)this._hue-=speed;
+                        else this._hue+=speed;
+
+                        this.updateColorField();
                     });
                     this._elHue.addEventListener("pointerdown",(e)=> { this._elHue.setPointerCapture(e.pointerId); });
                     this._elHue.addEventListener("pointerup",(e)=> { this._elHue.releasePointerCapture(e.pointerId); });
@@ -332,14 +339,21 @@
                         {
                             const x=Math.min(this._areaWidth,Math.max(0,e.offsetX));
                             const y=Math.min(this._areaHeight,Math.max(0,e.offsetY));
-
-                            const l=1.0-(y/this._areaHeight);
-                            const b=(x/this._areaWidth);
-
-                            this._color=chroma(this._hue, b, l, 'hsv');
+                            
+                            this._hueV=1.0-(y/this._areaHeight);
+                            this._hueS=(x/this._areaWidth);
 
                             this.updateColorField()
                         }
+                    });
+                    this._elArea.addEventListener("wheel",(e)=>
+                    {
+                        const speed=0.00025;
+                        
+                        if(e.deltaY>0)this._hueV-=speed;
+                        else this._hueV+=speed;
+
+                        this.updateColorField();
                     });
                     this._elArea.addEventListener("pointerdown",(e)=> { this._elArea.setPointerCapture(e.pointerId); });
                     this._elArea.addEventListener("pointerup",(e)=> { this._elArea.releasePointerCapture(e.pointerId); });
@@ -366,25 +380,42 @@
                 {
                     this._color=chroma(c);
                     this._hue=this._color.hsv()[0];
+                    this._hueS=this._color.hsv()[1];
+                    this._hueV=this._color.hsv()[2];
                     this.updateColorField();
                 }
 
                 updateCursors()
                 {
-                    if(this._color.luminance()>0.5)this._elAreaCursor.style.borderColor="black";
-                    else this._elAreaCursor.style.borderColor="white";
+                    if(this._color.luminance()>0.55)this._elAreaCursor.style.backgroundColor="black";
+                    else this._elAreaCursor.style.backgroundColor="white";
 
                     this._elHueCursor.style.top=(this._areaHeight-(this._hue/360*this._areaHeight))+"px";
-                    this._elAreaCursor.style.marginLeft=(this._color.hsv()[1]*this._areaWidth-2)+"px";
-                    this._elAreaCursor.style.marginTop=(this._areaHeight-(this._color.hsv()[2]*this._areaHeight)-2)+"px";
+                    this._elAreaCursor.style.marginLeft=(this._color.hsv()[1]*this._areaWidth-3)+"px";
+                    this._elAreaCursor.style.marginTop=(this._areaHeight-(this._color.hsv()[2]*this._areaHeight)-3)+"px";
                 }
 
                 updateColorField()
                 {
                     // const rgb=this._color.rgb();
 
-                    const rgb=chroma(this._hue, 1, 1, 'hsv').rgb();
-                    this._elArea.style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb[0]+", "+rgb[1]+", "+rgb[2]+"))"
+                    if(this._hue!=this._hue)this._hue=0;
+                    if(this._hue<0)this._hue=0.0;
+                    if(this._hue>360)this._hue=360;
+
+                    if(this._hueV!=this._hueV)this._hueV=0.0001;
+                    if(this._hueV<0)this._hueV=0.0001;
+                    if(this._hueV>1)this._hueV=1;
+
+                    if(this._hueS!=this._hueS)this._hueS=0.0001;
+                    if(this._hueS<0)this._hueS=0.0001;
+                    if(this._hueS>1)this._hueS=1;
+
+                    this._color=chroma(this._hue, this._hueS, this._hueV, 'hsv');
+
+                    const rgb_bgcol=chroma(this._hue, 1,1, 'hsv').rgb();
+                    this._elArea.style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb_bgcol[0]+", "+rgb_bgcol[1]+", "+rgb_bgcol[2]+"))"
+
 
                     this._elColorBox.style.backgroundColor=this._color.hex();
                     this._inputHex.value=this._color.hex();
