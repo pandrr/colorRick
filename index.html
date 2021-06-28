@@ -315,17 +315,8 @@
 
 
 
-                    this._elHue.addEventListener("pointermove",(e)=>
-                    {
-                        if(e.buttons==1)
-                        {
-                            const y=Math.min(this._areaHeight,Math.max(0,e.offsetY));
-
-                            this._hue=(1.0-(y/this._areaHeight))*360;
-                            
-                            this.updateColorField();
-                        }
-                    });
+                    this._elHue.addEventListener("pointerdown",this._onHueMouse.bind(this));
+                    this._elHue.addEventListener("pointermove",this._onHueMouse.bind(this));
 
                     this._elHue.addEventListener("wheel",(e)=>
                     {
@@ -339,19 +330,8 @@
                     this._elHue.addEventListener("pointerdown",(e)=> { this._elHue.setPointerCapture(e.pointerId); });
                     this._elHue.addEventListener("pointerup",(e)=> { this._elHue.releasePointerCapture(e.pointerId); });
 
-                    this._elArea.addEventListener("pointermove",(e)=>
-                    {
-                        if(e.buttons==1)
-                        {
-                            const x=Math.min(this._areaWidth,Math.max(0,e.offsetX));
-                            const y=Math.min(this._areaHeight,Math.max(0,e.offsetY));
-                            
-                            this._hueV=1.0-(y/this._areaHeight);
-                            this._hueS=(x/this._areaWidth);
-
-                            this.updateColorField()
-                        }
-                    });
+                    this._elArea.addEventListener("pointerdown",this._onAreaMouse.bind(this));
+                    this._elArea.addEventListener("pointermove",this._onAreaMouse.bind(this));
                     this._elArea.addEventListener("wheel",(e)=>
                     {
                         const speed=0.00025;
@@ -450,6 +430,32 @@
                     for(let i=0;i<this._elements.length;i++)
                     {
                         this._elements[i].remove();
+                    }
+                }
+
+                _onHueMouse(e)
+                {
+                    if(e.buttons==1)
+                    {
+                        const y=Math.min(this._areaHeight,Math.max(0,e.offsetY));
+
+                        this._hue=(1.0-(y/this._areaHeight))*360;
+                        
+                        this.updateColorField();
+                    }
+                }
+
+                _onAreaMouse(e)
+                {
+                    if(e.buttons==1)
+                    {
+                        const x=Math.min(this._areaWidth,Math.max(0,e.offsetX));
+                        const y=Math.min(this._areaHeight,Math.max(0,e.offsetY));
+                        
+                        this._hueV=1.0-(y/this._areaHeight);
+                        this._hueS=(x/this._areaWidth);
+
+                        this.updateColorField()
                     }
                 }
             };
