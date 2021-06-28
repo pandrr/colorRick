@@ -43,6 +43,7 @@
                 top:var(--pad);
                 background: linear-gradient(to right, rgb(255, 255, 255), rgb(0, 255, 11));
                 position: absolute;
+                cursor:pointer;
             }
 
             .colorpick_brightness
@@ -55,6 +56,7 @@
 
             .colorpick_hue
             {
+                cursor:pointer;
                 top:var(--pad);
                 background:linear-gradient(red,#f0f 17%,#00f 34%,#0ff 50%,#0f0 67%,#ff0 84%,red);
                 height:var(--height);
@@ -77,6 +79,7 @@
             {
                 margin-left:10px;
                 width:64px;
+                cursor:pointer;
             }
 
             .colorpick_cursor
@@ -158,9 +161,8 @@
     </head>
     <body>
 
-
         <br/><br/><br/>
-        <div class="button" onclick="new ColorRick({ele:this,color:'#ff0000'});">clickme</div>
+        <div class="button" onclick="new ColorRick({ele:this,color:this.style.backgroundColor||'#ff0000',onChange:(col)=>{this.style.backgroundColor=col.hex();}});">clickme</div>
         <br/><br/><br/><br/><br/>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<div class="button" onclick="new ColorRick({ele:this,color:'#00ff00'});">clickme</div>
 
@@ -239,6 +241,10 @@
                     this._elements.push(this._elInputContainer);
 
 
+
+                    
+
+
                     const inputs=
                         "<table>"+
                             "<tr>"+
@@ -295,7 +301,7 @@
                     {
                         const r=this.options.ele.getBoundingClientRect();
                         this._elContainer.style.top=r.y;
-                        this._elContainer.style.left=r.x;
+                        this._elContainer.style.left=r.x+30;
                     }
 
                     if(this.options.color)
@@ -358,8 +364,11 @@
                     this._elArea.addEventListener("pointerdown",(e)=> { this._elArea.setPointerCapture(e.pointerId); });
                     this._elArea.addEventListener("pointerup",(e)=> { this._elArea.releasePointerCapture(e.pointerId); });
 
-
                     document.addEventListener("pointerdown",this._clickOutside.bind(this));
+
+                    this._elColorBoxOrig.addEventListener("click",()=>{
+                        this.setColor(this._elColorBoxOrig.style.backgroundColor);
+                    });
                 }
 
                 _clickOutside(e)
@@ -412,6 +421,9 @@
                     if(this._hueS>1)this._hueS=1;
 
                     this._color=chroma(this._hue, this._hueS, this._hueV, 'hsv');
+
+                    if(this.options.onChange && this._currentHex!=this._color.hex())this.options.onChange(this._color);
+                    this._currentHex=this._color.hex();
 
                     const rgb_bgcol=chroma(this._hue, 1,1, 'hsv').rgb();
                     this._elArea.style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb_bgcol[0]+", "+rgb_bgcol[1]+", "+rgb_bgcol[2]+"))"
