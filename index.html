@@ -27,12 +27,14 @@
             {
                 --width:256px;
                 --height:256px;
-                --width-hue:30px;
+                --width-hue:20px;
                 --pad:10px;
+                --colorblock-height:20px;
+                --inputcontainer-height:120px;
                 
                 background-color: #222;
                 width:calc(var(--width) + 3*var(--pad) + var(--width-hue));
-                height:444px;
+                height:calc(var(--height) + var(--colorblock-height) + 30px + var(--inputcontainer-height));
                 position: absolute;
                 border-radius: 10px;
                 overflow: hidden;
@@ -78,16 +80,16 @@
             .colorpick_preview
             {
                 position: absolute;
-                width:192px;
-                height:30px;
-                top:276px;
-                margin-left:74px;
+                width:calc(var(--width) / 10 * 9);
+                height:var(--colorblock-height);
+                top:calc(var(--height) + 20px);
+                margin-left:10px;
             }
 
             .colorpick_preview_orig
             {
-                margin-left:10px;
-                width:64px;
+                margin-left:calc(calc(var(--width) / 10 * 9) + 10px);
+                width:calc(var(--width) / 10);
                 cursor:pointer;
             }
 
@@ -105,7 +107,7 @@
             .colorpick_cursor_hue
             {
                 position: absolute;
-                width:34px;
+                width:24px;
                 margin-left: -2px;
                 height:0px;
                 border-top:1px solid white;
@@ -117,13 +119,19 @@
             .colorpick_inputcontainer
             {
                 position: absolute;
-                width:200px;
-                height:300px;
-                top:320px;
+                
+                height:var(--inputcontainer-height);
+                /* top:250px; */
+                top:calc(var(--height) + 20px + 20px + 10px);
                 left:0px;
                 width:100%;
                 background-color: #000;
                 padding:10px;
+            }
+
+            .colorpick_inputcontainer table
+            {
+                width:var(--width);
             }
 
             .colorpick_inputcontainer, .colorpick_inputcontainer table
@@ -157,7 +165,7 @@
 
             .colorpick_inputcontainer table
             {
-                width:90%;
+                /* width:90%; */
             }
 
             .colorpick_inputcontainer table,.colorpick_inputcontainer table td, .colorpick_inputcontainer table tr
@@ -215,12 +223,16 @@
                     this.options=options;
 
                     this._areaWidth=256;
-                    this._areaHeight=256;
+                    this._areaHeight=150;
 
                     this._elContainer = document.createElement("div");
                     this._elContainer.classList.add("colorpick_dialog");
                     document.body.appendChild(this._elContainer);
                     this._elements.push(this._elContainer);
+
+                    this._elContainer.style.setProperty('--width', this._areaWidth + "px");
+                    this._elContainer.style.setProperty('--height', this._areaHeight + "px");
+
 
                     this._elArea = document.createElement("div");
                     this._elArea.classList.add("colorpick_area");
@@ -362,6 +374,7 @@
                         else this._hue+=speed;
 
                         this.updateColorField();
+                        e.preventDefault();
                     });
 
                     if(this.options.ele)
@@ -392,6 +405,7 @@
                         else this._hueV+=speed;
 
                         this.updateColorField();
+                        e.preventDefault();
                     });
                     this._elArea.addEventListener("pointerdown",(e)=> { this._elArea.setPointerCapture(e.pointerId); });
                     this._elArea.addEventListener("pointerup",(e)=> { this._elArea.releasePointerCapture(e.pointerId); });
@@ -405,14 +419,7 @@
 
                 _clickOutside(e)
                 {
-                    for(let i=0;i<this._elements.length;i++)
-                    {
-                        if(e.target==this._elements[i])
-                        {
-                            console.log("bla");
-                            return true; 
-                        }
-                    }
+                    if(this._elContainer.contains(e.target)) return true;
 
                     this.close();
                 }
@@ -420,7 +427,7 @@
                 validateHexInput()
                 {
                     let v=this._inputHex.value;
-                    if(v.indexOf("#")==-1)v="#"+v;
+                    if(v.indexOf("#")==-1) v="#"+v;
                     const valid=v.length==7;
 
                     if(valid) 
@@ -475,7 +482,6 @@
                     const rgb_bgcol=chroma(this._hue, 1,1, 'hsv').rgb();
                     this._elArea.style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb_bgcol[0]+", "+rgb_bgcol[1]+", "+rgb_bgcol[2]+"))"
 
-
                     this._elColorBox.style.backgroundColor=this._color.hex();
                     this._inputHex.value=this._color.hex();
 
@@ -494,10 +500,7 @@
                 {
                     document.removeEventListener("pointerdown",this._clickOutside.bind(this));
 
-                    for(let i=0;i<this._elements.length;i++)
-                    {
-                        this._elements[i].remove();
-                    }
+                    for(let i=0;i<this._elements.length;i++) this._elements[i].remove();
                 }
 
                 _onHueMouse(e)
