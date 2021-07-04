@@ -1,7 +1,7 @@
 <html>
     <head>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.2/chroma.min.js" integrity="sha512-8TVPS0EFkkmtT6yPb5K4csnSt3tjbKRrs0F8gvTNKv2OxOcwDO7+Klkz86gMVrzfqtZos5N2a+k+r9D+hlccmQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <!-- <script src="chroma.js"></script> -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.2/chroma.min.js" integrity="sha512-8TVPS0EFkkmtT6yPb5K4csnSt3tjbKRrs0F8gvTNKv2OxOcwDO7+Klkz86gMVrzfqtZos5N2a+k+r9D+hlccmQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+        <script src="chroma.js"></script>
 
         <style>
 
@@ -167,6 +167,15 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<div class="button" onclick="new ColorRick({ele:this,color:'#00ff00'});">clickme</div>
 
         <br/><br/><br/><br/><br/>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<div class="button" onclick="new ColorRick({ele:this,color:'#77aa55'});">clickme</div>
 
         <br/><br/><br/><br/><br/>
@@ -297,12 +306,7 @@
 
                     this._color=chroma("white");
 
-                    if(this.options.ele)
-                    {
-                        const r=this.options.ele.getBoundingClientRect();
-                        this._elContainer.style.top=r.y;
-                        this._elContainer.style.left=r.x+30;
-                    }
+
 
                     if(this.options.color)
                     {
@@ -327,6 +331,23 @@
 
                         this.updateColorField();
                     });
+
+                    if(this.options.ele)
+                    {
+                        const r=this.options.ele.getBoundingClientRect();
+
+                        const padding=60;
+                        const winWidth=document.body.getBoundingClientRect().width;
+                        const containerWidth=this._elContainer.getBoundingClientRect().width;
+                        const leftAligned=(r.x+padding)>winWidth-containerWidth;
+
+                        this._elContainer.style.top=r.y-padding/2;
+
+                        if(!leftAligned) this._elContainer.style.left=r.x+padding;
+                        else this._elContainer.style.left=r.x-containerWidth;
+
+                    }
+
                     this._elHue.addEventListener("pointerdown",(e)=> { this._elHue.setPointerCapture(e.pointerId); });
                     this._elHue.addEventListener("pointerup",(e)=> { this._elHue.releasePointerCapture(e.pointerId); });
 
