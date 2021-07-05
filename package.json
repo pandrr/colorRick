@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "dev": "parcel index.js index.html",
+    "build": "parcel build index.js index.html"
+  },
+  "devDependencies": {
+    "chroma-js": "^2.1.2",
+    "webpack": "^5.42.0",
+    "webpack-cli": "^4.7.2"
+  }
+}
