@@ -130,6 +130,24 @@ class ColorRick
         this.updateColorField();
 
 
+
+        this._inputR.addEventListener("input",(e)=>
+        {
+            this._setColorFromRgbInputs();
+        });
+
+        this._inputG.addEventListener("input",(e)=>
+        {
+            this._setColorFromRgbInputs();
+        });
+
+        this._inputB.addEventListener("input",(e)=>
+        {
+            this._setColorFromRgbInputs();
+        });
+
+
+
         this._inputHex.addEventListener("input",(e)=>
         {
             if(this.validateHexInput()) this.setColor(this.validateHexInput())
@@ -221,6 +239,13 @@ class ColorRick
             
     }
 
+
+    _setColorFromRgbInputs()
+    {
+        console.log("_setColorFromRgbInputs",this._inputR.value,this._inputG.value,this._inputB.value);
+        this.setColor([parseInt(this._inputR.value),parseInt(this._inputG.value),parseInt(this._inputB.value)]);
+    }
+
     setColor(c)
     {
         this._color=chroma(c);
@@ -229,6 +254,7 @@ class ColorRick
         this._hueV=this._color.hsv()[2];
         this.updateColorField();
     }
+
 
     updateCursors()
     {
