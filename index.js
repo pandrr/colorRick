@@ -327,7 +327,6 @@ class ColorRick
         this._inputG.value=this._color.rgb()[1];
         this._inputB.value=this._color.rgb()[2];
 
-
         this.updateCursors();
     }
 
