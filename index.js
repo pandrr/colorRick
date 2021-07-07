@@ -185,7 +185,7 @@ class ColorRick
 
         this._elHue.addEventListener("wheel",(e)=>
         {
-            const speed=0.1;
+            const speed=0.2;
             
             if(e.deltaY>0)this._hue-=speed;
             else this._hue+=speed;
@@ -216,7 +216,7 @@ class ColorRick
         this._elArea.addEventListener("pointermove",this._onAreaMouse.bind(this));
         this._elArea.addEventListener("wheel",(e)=>
         {
-            const speed=0.00025;
+            const speed=0.001;
             
             if(e.deltaY>0)this._hueV-=speed;
             else this._hueV+=speed;
