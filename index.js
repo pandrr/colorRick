@@ -16,7 +16,7 @@ class ColorRick
         this._areaHeight=150;
 
         this._elContainer = document.createElement("div");
-        this._elContainer.classList.add("colorpick_dialog");
+        this._elContainer.classList.add("colorRick_dialog");
         document.body.appendChild(this._elContainer);
         this._elements.push(this._elContainer);
 
@@ -25,44 +25,44 @@ class ColorRick
 
 
         this._elArea = document.createElement("div");
-        this._elArea.classList.add("colorpick_area");
+        this._elArea.classList.add("colorRick_area");
         this._elContainer.appendChild(this._elArea);
         this._elements.push(this._elArea);
 
         this._elAreaCursor = document.createElement("div");
-        this._elAreaCursor.classList.add("colorpick_cursor");
+        this._elAreaCursor.classList.add("colorRick_cursor");
         this._elArea.appendChild(this._elAreaCursor);
         this._elements.push(this._elAreaCursor);
 
         this._elBrightness = document.createElement("div");
-        this._elBrightness.classList.add("colorpick_brightness");
+        this._elBrightness.classList.add("colorRick_brightness");
         this._elArea.appendChild(this._elBrightness);
         this._elements.push(this._elBrightness);
 
 
         this._elHue = document.createElement("div");
-        this._elHue.classList.add("colorpick_hue");
+        this._elHue.classList.add("colorRick_hue");
         this._elContainer.appendChild(this._elHue);
         this._elements.push(this._elHue);
 
         this._elHueCursor = document.createElement("div");
-        this._elHueCursor.classList.add("colorpick_cursor_hue");
+        this._elHueCursor.classList.add("colorRick_cursor_hue");
         this._elHue.appendChild(this._elHueCursor);
         this._elements.push(this._elHueCursor);
 
         this._elColorBox = document.createElement("div");
-        this._elColorBox.classList.add("colorpick_preview");
+        this._elColorBox.classList.add("colorRick_preview");
         this._elContainer.appendChild(this._elColorBox);
         this._elements.push(this._elColorBox);
 
         this._elColorBoxOrig = document.createElement("div");
-        this._elColorBoxOrig.classList.add("colorpick_preview");
-        this._elColorBoxOrig.classList.add("colorpick_preview_orig");
+        this._elColorBoxOrig.classList.add("colorRick_preview");
+        this._elColorBoxOrig.classList.add("colorRick_preview_orig");
         this._elContainer.appendChild(this._elColorBoxOrig);
         this._elements.push(this._elColorBoxOrig);
 
         this._elInputContainer = document.createElement("div");
-        this._elInputContainer.classList.add("colorpick_inputcontainer");
+        this._elInputContainer.classList.add("colorRick_inputcontainer");
         this._elContainer.appendChild(this._elInputContainer);
         this._elements.push(this._elInputContainer);
 
@@ -73,7 +73,7 @@ class ColorRick
                         "HEX"+
                     "</td>"+
                     "<td class=\"right\">"+
-                        "<input id=\"colorpick_input_hex\" class=\"colorpick_input colorpick_input_hex\" />"+
+                        "<input id=\"colorRick_input_hex\" class=\"colorRick_input colorpick_input_hex\" />"+
                     "</td>"+
                 "</tr>"+
                 "<tr>"+
@@ -81,9 +81,9 @@ class ColorRick
                         "RGB"+
                     "</td>"+
                     "<td class=\"right\">"+
-                        "<input id=\"colorpick_input_r\" class=\"colorpick_input colorpick_input_small\" />"+
-                        "<input id=\"colorpick_input_g\" class=\"colorpick_input colorpick_input_small\" />"+
-                        "<input id=\"colorpick_input_b\" class=\"colorpick_input colorpick_input_small\" />"+
+                        "<input id=\"colorRick_input_r\" class=\"colorRick_input colorpick_input_small\" />"+
+                        "<input id=\"colorRick_input_g\" class=\"colorRick_input colorpick_input_small\" />"+
+                        "<input id=\"colorRick_input_b\" class=\"colorRick_input colorpick_input_small\" />"+
                     "</td>"+
                 "</tr>"+
                 "<tr>"+
@@ -91,9 +91,9 @@ class ColorRick
                         "HSV"+
                     "</td>"+
                     "<td class=\"right\">"+
-                        "<input id=\"colorpick_input_h\" class=\"colorpick_input colorpick_input_small\" />"+
-                        "<input id=\"colorpick_input_s\" class=\"colorpick_input colorpick_input_small\" />"+
-                        "<input id=\"colorpick_input_v\" class=\"colorpick_input colorpick_input_small\" />"+
+                        "<input id=\"colorRick_input_h\" class=\"colorRick_input colorpick_input_small\" />"+
+                        "<input id=\"colorRick_input_s\" class=\"colorRick_input colorpick_input_small\" />"+
+                        "<input id=\"colorRick_input_v\" class=\"colorRick_input colorpick_input_small\" />"+
                     "</td>"+
                 "</tr>"+
             "</table>";
@@ -101,15 +101,15 @@ class ColorRick
 
         this._elInputContainer.innerHTML=inputs;
 
-        this._inputHex=document.getElementById("colorpick_input_hex");
+        this._inputHex=document.getElementById("colorRick_input_hex");
 
-        this._inputR=document.getElementById("colorpick_input_r");
-        this._inputG=document.getElementById("colorpick_input_g");
-        this._inputB=document.getElementById("colorpick_input_b");
+        this._inputR=document.getElementById("colorRick_input_r");
+        this._inputG=document.getElementById("colorRick_input_g");
+        this._inputB=document.getElementById("colorRick_input_b");
 
-        this._inputH=document.getElementById("colorpick_input_h");
-        this._inputS=document.getElementById("colorpick_input_s");
-        this._inputV=document.getElementById("colorpick_input_v");
+        this._inputH=document.getElementById("colorRick_input_h");
+        this._inputS=document.getElementById("colorRick_input_s");
+        this._inputV=document.getElementById("colorRick_input_v");
 
         this._elements.push(this._inputHex);
         this._elements.push(this._inputR,this._inputG,this._inputB);
@@ -174,7 +174,7 @@ class ColorRick
         {
             if(!this.validateHexInput()) 
             {
-                this._inputHex.classList.remove("colorpick_invalid");
+                this._inputHex.classList.remove("colorRick_invalid");
                 this._inputHex.value=this._color.hex();
             }
 
@@ -249,10 +249,10 @@ class ColorRick
 
         if(valid) 
         {
-            this._inputHex.classList.remove("colorpick_invalid");
+            this._inputHex.classList.remove("colorRick_invalid");
             return v;
         }
-        else this._inputHex.classList.add("colorpick_invalid");
+        else this._inputHex.classList.add("colorRick_invalid");
     }
 
     _setColorFromHsvInputs()
