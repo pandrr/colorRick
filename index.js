@@ -73,7 +73,7 @@ class ColorRick
                         "HEX"+
                     "</td>"+
                     "<td class=\"right\">"+
-                        "<input id=\"colorRick_input_hex\" class=\"colorRick_input colorpick_input_hex\" />"+
+                        "<input id=\"colorRick_input_hex\" class=\"colorRick_input colorRick_input_hex\" />"+
                     "</td>"+
                 "</tr>"+
                 "<tr>"+
@@ -81,9 +81,9 @@ class ColorRick
                         "RGB"+
                     "</td>"+
                     "<td class=\"right\">"+
-                        "<input id=\"colorRick_input_r\" class=\"colorRick_input colorpick_input_small\" />"+
-                        "<input id=\"colorRick_input_g\" class=\"colorRick_input colorpick_input_small\" />"+
-                        "<input id=\"colorRick_input_b\" class=\"colorRick_input colorpick_input_small\" />"+
+                        "<input id=\"colorRick_input_r\" class=\"colorRick_input colorRick_input_small\" />"+
+                        "<input id=\"colorRick_input_g\" class=\"colorRick_input colorRick_input_small\" />"+
+                        "<input id=\"colorRick_input_b\" class=\"colorRick_input colorRick_input_small\" />"+
                     "</td>"+
                 "</tr>"+
                 "<tr>"+
@@ -91,9 +91,9 @@ class ColorRick
                         "HSV"+
                     "</td>"+
                     "<td class=\"right\">"+
-                        "<input id=\"colorRick_input_h\" class=\"colorRick_input colorpick_input_small\" />"+
-                        "<input id=\"colorRick_input_s\" class=\"colorRick_input colorpick_input_small\" />"+
-                        "<input id=\"colorRick_input_v\" class=\"colorRick_input colorpick_input_small\" />"+
+                        "<input id=\"colorRick_input_h\" class=\"colorRick_input colorRick_input_small\" />"+
+                        "<input id=\"colorRick_input_s\" class=\"colorRick_input colorRick_input_small\" />"+
+                        "<input id=\"colorRick_input_v\" class=\"colorRick_input colorRick_input_small\" />"+
                     "</td>"+
                 "</tr>"+
             "</table>";
