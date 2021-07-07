@@ -147,6 +147,23 @@ class ColorRick
         });
 
 
+        this._inputH.addEventListener("input",(e)=>
+        {
+            this._setColorFromHsvInputs();
+        });
+
+        this._inputS.addEventListener("input",(e)=>
+        {
+            this._setColorFromHsvInputs();
+        });
+
+        this._inputV.addEventListener("input",(e)=>
+        {
+            this._setColorFromHsvInputs();
+        });
+
+
+
 
         this._inputHex.addEventListener("input",(e)=>
         {
@@ -236,13 +253,22 @@ class ColorRick
             return v;
         }
         else this._inputHex.classList.add("colorpick_invalid");
-            
     }
 
+    _setColorFromHsvInputs()
+    {
+        this._color=chroma(this._inputH.value,this._inputS.value,this._inputV.value,"hsv");
+
+        this._hue=this._inputH.value;
+        this._hueS=this._inputS.value;
+        this._hueV=this._inputV.value;
+
+        this.updateColorField();
+
+    }
 
     _setColorFromRgbInputs()
     {
-        console.log("_setColorFromRgbInputs",this._inputR.value,this._inputG.value,this._inputB.value);
         this.setColor([parseInt(this._inputR.value),parseInt(this._inputG.value),parseInt(this._inputB.value)]);
     }
 
@@ -252,9 +278,13 @@ class ColorRick
         this._hue=this._color.hsv()[0];
         this._hueS=this._color.hsv()[1];
         this._hueV=this._color.hsv()[2];
+
+        this._inputH.value=this._color.hsv()[0];
+        this._inputS.value=this._color.hsv()[1];
+        this._inputV.value=this._color.hsv()[2];
+
         this.updateColorField();
     }
-
 
     updateCursors()
     {
@@ -297,9 +327,6 @@ class ColorRick
         this._inputG.value=this._color.rgb()[1];
         this._inputB.value=this._color.rgb()[2];
 
-        this._inputH.value=this._color.hsv()[0];
-        this._inputS.value=this._color.hsv()[1];
-        this._inputV.value=this._color.hsv()[2];
 
         this.updateCursors();
     }
