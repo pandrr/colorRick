@@ -223,7 +223,7 @@ class ColorRick
             if(e.deltaY>0)this._hueV-=speed;
             else this._hueV+=speed;
 
-            this._inputH.value=this._hueV;
+            this._inputV.value=this._hueV;
 
             this.updateColorField();
             e.preventDefault();
@@ -259,11 +259,24 @@ class ColorRick
         else this._inputHex.classList.add("colorRick_invalid");
     }
 
+    setHsvInputs(h,s,v)
+    {
+
+        if(parseFloat(h)!=parseFloat(h))
+        {
+            console.log(" NOT A NUMBER")
+            console.log(new Error().stack)
+        }
+        this._inputH.value=parseFloat(h)||0;
+        this._inputS.value=parseFloat(s)||0;
+        this._inputV.value=parseFloat(v)||0;
+    }
+
     _setColorFromHsvInputs()
     {
         this._color=chroma(this._inputH.value,this._inputS.value,this._inputV.value,"hsv");
 
-        this._hue=this._inputH.value;
+        this._hue=this._inputH.value||0;
         this._hueS=this._inputS.value;
         this._hueV=this._inputV.value;
 
@@ -278,14 +291,15 @@ class ColorRick
 
     setColor(c)
     {
+
+        console.log("setcolor func!")
+    
         this._color=chroma(c);
         this._hue=this._color.hsv()[0];
         this._hueS=this._color.hsv()[1];
         this._hueV=this._color.hsv()[2];
 
-        this._inputH.value=this._color.hsv()[0];
-        this._inputS.value=this._color.hsv()[1];
-        this._inputV.value=this._color.hsv()[2];
+        this.setHsvInputs(this._color.hsv()[0], this._inputS.value=this._color.hsv()[1], this._inputV.value=this._color.hsv()[2]);
 
         this.updateColorField();
     }
@@ -348,7 +362,8 @@ class ColorRick
             const y=Math.min(this._areaHeight,Math.max(0,e.offsetY));
 
             this._hue=(1.0-(y/this._areaHeight))*360;
-            this._inputH.value=this._hue||0;
+
+            this.setHsvInputs(this._hue,this._hueS,this._hueV);
 
             this.updateColorField();
         }
