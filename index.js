@@ -189,8 +189,10 @@ class ColorRick
             
             if(e.deltaY>0)this._hue-=speed;
             else this._hue+=speed;
+            this._inputH.value=this._hue;
 
-            this.updateColorField();
+            this._setColorFromHsvInputs();
+            
             e.preventDefault();
         });
 
@@ -220,6 +222,8 @@ class ColorRick
             
             if(e.deltaY>0)this._hueV-=speed;
             else this._hueV+=speed;
+
+            this._inputH.value=this._hueV;
 
             this.updateColorField();
             e.preventDefault();
@@ -344,7 +348,8 @@ class ColorRick
             const y=Math.min(this._areaHeight,Math.max(0,e.offsetY));
 
             this._hue=(1.0-(y/this._areaHeight))*360;
-            
+            this._inputH.value=this._hue||0;
+
             this.updateColorField();
         }
     }
@@ -359,7 +364,10 @@ class ColorRick
             this._hueV=1.0-(y/this._areaHeight);
             this._hueS=(x/this._areaWidth);
 
-            this.updateColorField()
+            this._inputS.value=this._hueS;
+            this._inputV.value=this._hueV;
+            this._setColorFromHsvInputs();
+            
         }
     }
 };
