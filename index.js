@@ -2,7 +2,7 @@
 // window.chroma = require("chroma-js");
 const chroma = require("chroma-js");
 // import chroma from "chroma-js";
-// console.log(1234,chroma);
+
 
 class ColorRick
 {
@@ -117,7 +117,6 @@ class ColorRick
         
 
         this._color=chroma("white");
-
 
 
         if(this.options.color)
@@ -274,14 +273,11 @@ class ColorRick
 
     _setColorFromHsvInputs()
     {
-        this._color=chroma(this._inputH.value,this._inputS.value,this._inputV.value,"hsv");
-
         this._hue=this._inputH.value||0;
         this._hueS=this._inputS.value;
         this._hueV=this._inputV.value;
 
         this.updateColorField();
-
     }
 
     _setColorFromRgbInputs()
@@ -291,9 +287,6 @@ class ColorRick
 
     setColor(c)
     {
-
-        console.log("setcolor func!")
-    
         this._color=chroma(c);
         this._hue=this._color.hsv()[0];
         this._hueS=this._color.hsv()[1];
@@ -314,12 +307,15 @@ class ColorRick
         this._elAreaCursor.style.marginTop=(this._areaHeight-(this._color.hsv()[2]*this._areaHeight)-3)+"px";
     }
 
+    validateHSV()
+    {
+
+    }
+
     updateColorField()
     {
-        // const rgb=this._color.rgb();
-
         if(this._hue!=this._hue)this._hue=0;
-        if(this._hue<0)this._hue=0.0;
+        if(this._hue<0)this._hue=0;
         if(this._hue>360)this._hue=360;
 
         if(this._hueV!=this._hueV)this._hueV=0.0001;
@@ -330,12 +326,12 @@ class ColorRick
         if(this._hueS<0)this._hueS=0.0001;
         if(this._hueS>1)this._hueS=1;
 
-        this._color=chroma(this._hue, this._hueS, this._hueV, 'hsv');
+        this._color=chroma(this._hue%360, this._hueS, this._hueV, 'hsv');
 
         if(this.options.onChange && this._currentHex!=this._color.hex())this.options.onChange(this._color);
         this._currentHex=this._color.hex();
 
-        const rgb_bgcol=chroma(this._hue, 1,1, 'hsv').rgb();
+        const rgb_bgcol=chroma(this._hue%360, 1,1, 'hsv').rgb();
         this._elArea.style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb_bgcol[0]+", "+rgb_bgcol[1]+", "+rgb_bgcol[2]+"))"
 
         this._elColorBox.style.backgroundColor=this._color.hex();
