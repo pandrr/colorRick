@@ -210,8 +210,12 @@ class ColorRick
             else this._elContainer.style.top=(r.y)+"px";
         }
 
-        this._elHue.addEventListener("pointerdown",(e)=> { this._elHue.setPointerCapture(e.pointerId); });
-        this._elHue.addEventListener("pointerup",(e)=> { this._elHue.releasePointerCapture(e.pointerId); });
+        this._elHue.addEventListener("pointerdown",(e)=> { this._elHue.setPointerCapture(e.pointerId); if(this.options.onStart)this.options.onStart();});
+        this._elHue.addEventListener("pointerup",(e)=> { this._elHue.releasePointerCapture(e.pointerId); if(this.options.onEnd)this.options.onEnd();});
+
+        this._elArea.addEventListener("pointerdown",(e)=> { this._elArea.setPointerCapture(e.pointerId); if(this.options.onStart)this.options.onStart();});
+        this._elArea.addEventListener("pointerup",(e)=> { this._elArea.releasePointerCapture(e.pointerId); if(this.options.onEnd)this.options.onEnd();});
+
 
         this._elArea.addEventListener("pointerdown",this._onAreaMouse.bind(this));
         this._elArea.addEventListener("pointermove",this._onAreaMouse.bind(this));
