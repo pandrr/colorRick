@@ -14,7 +14,7 @@ class ColorRick
 
 
 
-        this._opacity=options.opacity||1;
+        this._opacity=options.opacity;
 
         this._areaWidth=256;
         this._areaHeight=150;
@@ -151,6 +151,7 @@ class ColorRick
         if(this.options.color)
         {
             this.setColor(this.options.color);
+
         }
 
         this._elColorBoxOrig.style.backgroundColor=this._color.hex();
@@ -368,17 +369,25 @@ class ColorRick
 
         this._color=chroma(this._hue%360, this._hueS, this._hueV, 'hsv');
 
-        if(this.options.onChange && this._currentHex!=this._color.hex())this.options.onChange(this._color);
+        if(this.options.onChange && (this._currentHex!=this._color.hex() || this._currentOpacity!=this._opacity))this.options.onChange(this._color,this._opacity);
         this._currentHex=this._color.hex();
+        this._currentOpacity=this._opacity;
 
         const rgb_bgcol=chroma(this._hue%360, 1,1, 'hsv').rgb();
         this._elArea.style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb_bgcol[0]+", "+rgb_bgcol[1]+", "+rgb_bgcol[2]+"))"
 
 
-        this._elColorBox.style.background="linear-gradient(to right,rgba("+this._color.rgb()[0]+","+this._color.rgb()[1]+","+this._color.rgb()[2]+",1) 50%,rgba("+this._color.rgb()[0]+","+this._color.rgb()[1]+","+this._color.rgb()[2]+","+this._opacity+") 51%)";
-        // this._elColorBox.style.backgroundColor=this._color.hex();
-
-        if(this._elOpacity)this._elOpacity.style.background="linear-gradient(rgba("+this._color.rgb()[0]+","+this._color.rgb()[1]+","+this._color.rgb()[2]+",1),rgba("+this._color.rgb()[0]+","+this._color.rgb()[1]+","+this._color.rgb()[2]+",0))"
+        
+        
+        if(this._elOpacity)
+        {
+            this._elColorBox.style.background="linear-gradient(to right,rgba("+this._color.rgb()[0]+","+this._color.rgb()[1]+","+this._color.rgb()[2]+",1) 50%,rgba("+this._color.rgb()[0]+","+this._color.rgb()[1]+","+this._color.rgb()[2]+","+this._opacity+") 51%)";
+            this._elOpacity.style.background="linear-gradient(rgba("+this._color.rgb()[0]+","+this._color.rgb()[1]+","+this._color.rgb()[2]+",1),rgba("+this._color.rgb()[0]+","+this._color.rgb()[1]+","+this._color.rgb()[2]+",0))"
+        }
+        else
+        {
+            this._elColorBox.style.backgroundColor=this._color.hex();
+        }
 
 
         
