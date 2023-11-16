@@ -12,6 +12,10 @@ class ColorRick
 
         this.options=options;
 
+
+
+        this._opacity=options.opacity||1;
+
         this._areaWidth=256;
         this._areaHeight=150;
 
@@ -19,6 +23,14 @@ class ColorRick
         this._elContainer.classList.add("colorRick_dialog");
         document.body.appendChild(this._elContainer);
         this._elements.push(this._elContainer);
+
+        if(!options.showOpacity) 
+        {
+            this._elContainer.style.setProperty('--width-opacity', "0px");
+            this._elContainer.style.setProperty('--pad-opacity', "0px");
+        }
+
+
 
         this._elContainer.style.setProperty('--width', this._areaWidth + "px");
         this._elContainer.style.setProperty('--height', this._areaHeight + "px");
@@ -39,6 +51,7 @@ class ColorRick
         this._elArea.appendChild(this._elBrightness);
         this._elements.push(this._elBrightness);
 
+        // hue slider
 
         this._elHue = document.createElement("div");
         this._elHue.classList.add("colorRick_hue");
@@ -49,6 +62,22 @@ class ColorRick
         this._elHueCursor.classList.add("colorRick_cursor_hue");
         this._elHue.appendChild(this._elHueCursor);
         this._elements.push(this._elHueCursor);
+
+        // opacity slider
+
+        if(options.showOpacity) 
+        {
+            this._elOpacity = document.createElement("div");
+            this._elOpacity.classList.add("colorRick_opacity");
+            this._elContainer.appendChild(this._elOpacity);
+            this._elements.push(this._elOpacity);
+
+            this._elOpacityCursor = document.createElement("div");
+            this._elOpacityCursor.classList.add("colorRick_cursor_opacity");
+            this._elOpacity.appendChild(this._elOpacityCursor);
+            this._elements.push(this._elOpacityCursor);
+        }
+
 
         this._elColorBox = document.createElement("div");
         this._elColorBox.classList.add("colorRick_preview");
@@ -126,6 +155,7 @@ class ColorRick
 
         this._elColorBoxOrig.style.backgroundColor=this._color.hex();
 
+
         this.updateColorField();
 
 
@@ -182,18 +212,23 @@ class ColorRick
         this._elHue.addEventListener("pointerdown",this._onHueMouse.bind(this));
         this._elHue.addEventListener("pointermove",this._onHueMouse.bind(this));
 
-        this._elHue.addEventListener("wheel",(e)=>
-        {
-            const speed=0.2;
-            
-            if(e.deltaY>0)this._hue-=speed;
-            else this._hue+=speed;
-            this._inputH.value=this._hue;
+        
+        if(this._elOpacity)this._elOpacity.addEventListener("pointerdown",this._onOpacityMouse.bind(this));
+        if(this._elOpacity)this._elOpacity.addEventListener("pointermove",this._onOpacityMouse.bind(this));
 
-            this._setColorFromHsvInputs();
+        // this._elHue.addEventListener("wheel",(e)=>
+        // {
+        //     const speed=0.2;
+        //     console.log("hue mousewheel");
             
-            e.preventDefault();
-        });
+        //     if(e.deltaY>0)this._hue-=speed;
+        //     else this._hue+=speed;
+        //     this._inputH.value=this._hue;
+
+        //     this._setColorFromHsvInputs();
+            
+        //     e.preventDefault();
+        // });
 
         if(this.options.ele)
         {
@@ -306,6 +341,7 @@ class ColorRick
         if(this._color.luminance()>0.55)this._elAreaCursor.style.backgroundColor="black";
         else this._elAreaCursor.style.backgroundColor="white";
 
+        if(this._elOpacityCursor)this._elOpacityCursor.style.top=(this._areaHeight-(this._opacity*this._areaHeight))+"px";
         this._elHueCursor.style.top=(this._areaHeight-(this._hue/360*this._areaHeight))+"px";
         this._elAreaCursor.style.marginLeft=(this._color.hsv()[1]*this._areaWidth-3)+"px";
         this._elAreaCursor.style.marginTop=(this._areaHeight-(this._color.hsv()[2]*this._areaHeight)-3)+"px";
@@ -338,7 +374,14 @@ class ColorRick
         const rgb_bgcol=chroma(this._hue%360, 1,1, 'hsv').rgb();
         this._elArea.style.background="linear-gradient(to right, rgb(255, 255, 255), rgb("+rgb_bgcol[0]+", "+rgb_bgcol[1]+", "+rgb_bgcol[2]+"))"
 
-        this._elColorBox.style.backgroundColor=this._color.hex();
+
+        this._elColorBox.style.background="linear-gradient(to right,rgba("+this._color.rgb()[0]+","+this._color.rgb()[1]+","+this._color.rgb()[2]+",1) 50%,rgba("+this._color.rgb()[0]+","+this._color.rgb()[1]+","+this._color.rgb()[2]+","+this._opacity+") 51%)";
+        // this._elColorBox.style.backgroundColor=this._color.hex();
+
+        if(this._elOpacity)this._elOpacity.style.background="linear-gradient(rgba("+this._color.rgb()[0]+","+this._color.rgb()[1]+","+this._color.rgb()[2]+",1),rgba("+this._color.rgb()[0]+","+this._color.rgb()[1]+","+this._color.rgb()[2]+",0))"
+
+
+        
         this._inputHex.value=this._color.hex();
 
         this._inputR.value=this._color.rgb()[0];
@@ -365,6 +408,17 @@ class ColorRick
 
             this.setHsvInputs(this._hue,this._hueS,this._hueV);
 
+            this.updateColorField();
+        }
+    }
+
+    _onOpacityMouse(e)
+    {
+        if(e.buttons==1)
+        {
+            const y=Math.min(this._areaHeight,Math.max(0,e.offsetY));
+
+            this._opacity=(1.0-(y/this._areaHeight));
             this.updateColorField();
         }
     }
