@@ -243,7 +243,7 @@ class ColorRick
 
         if(this._elOpacity) this._elOpacity.addEventListener("wheel",(e)=>
         {
-            let speed=0.01;
+            let speed=0.003;
             if(e.altKey)speed/=3;
             if(e.deltaY>0)this._opacity-=speed;
             else this._opacity+=speed;
@@ -255,7 +255,7 @@ class ColorRick
         
         this._elHue.addEventListener("wheel",(e)=>
         {
-            let speed=0.2;
+            let speed=0.5;
             if(e.altKey)speed/=3;
             this._hue=parseFloat(this._hue);
 
