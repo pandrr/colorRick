@@ -217,19 +217,35 @@ class ColorRick
         if(this._elOpacity)this._elOpacity.addEventListener("pointerdown",this._onOpacityMouse.bind(this));
         if(this._elOpacity)this._elOpacity.addEventListener("pointermove",this._onOpacityMouse.bind(this));
 
-        // this._elHue.addEventListener("wheel",(e)=>
-        // {
-        //     const speed=0.2;
-        //     console.log("hue mousewheel");
+        this._elOpacity.addEventListener("wheel",(e)=>
+        {
+            const speed=0.01;
             
-        //     if(e.deltaY>0)this._hue-=speed;
-        //     else this._hue+=speed;
-        //     this._inputH.value=this._hue;
+            if(e.deltaY>0)this._opacity-=speed;
+            else this._opacity+=speed;
+    
+            this.updateColorField();
+            
+            e.preventDefault();
+        });
 
-        //     this._setColorFromHsvInputs();
+        
+        this._elHue.addEventListener("wheel",(e)=>
+        {
+            const speed=0.2;
             
-        //     e.preventDefault();
-        // });
+            this._hue=parseFloat(this._hue);
+
+            if(e.deltaY>0)this._hue-=speed;
+            else this._hue+=speed;
+            this._inputH.value=this._hue;
+
+            this._setColorFromHsvInputs();
+            
+            e.preventDefault();
+        });
+
+
 
         if(this.options.ele)
         {
@@ -257,7 +273,8 @@ class ColorRick
         this._elArea.addEventListener("pointermove",this._onAreaMouse.bind(this));
         this._elArea.addEventListener("wheel",(e)=>
         {
-            const speed=0.001;
+            let speed=0.008;
+            if(e.altKey)speed/=3;
             
             if(e.deltaY>0)this._hueV-=speed;
             else this._hueV+=speed;
@@ -313,9 +330,9 @@ class ColorRick
 
     _setColorFromHsvInputs()
     {
-        this._hue=this._inputH.value||0;
-        this._hueS=this._inputS.value;
-        this._hueV=this._inputV.value;
+        this._hue=parseFloat(this._inputH.value)||0;
+        this._hueS=parseFloat(this._inputS.value);
+        this._hueV=parseFloat(this._inputV.value);
 
         this.updateColorField();
     }
@@ -431,6 +448,8 @@ class ColorRick
             this.updateColorField();
         }
     }
+
+
 
     _onAreaMouse(e)
     {
