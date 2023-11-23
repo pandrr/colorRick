@@ -95,7 +95,7 @@ class ColorRick
         this._elContainer.appendChild(this._elInputContainer);
         this._elements.push(this._elInputContainer);
 
-        const inputs=
+        let inputs=
             "<table>"+
                 "<tr>"+
                     "<td>"+
@@ -103,6 +103,7 @@ class ColorRick
                     "</td>"+
                     "<td class=\"right\">"+
                         "<input id=\"colorRick_input_hex\" class=\"colorRick_input colorRick_input_hex\" />"+
+                        "<div class=\"opacity_title\" id=\"colorrick_opacity_title\">Opacity:</div> <input id=\"colorRick_input_opacity\" class=\"colorRick_input colorRick_input_small\" />"+
                     "</td>"+
                 "</tr>"+
                 "<tr>"+
@@ -131,6 +132,15 @@ class ColorRick
         this._elInputContainer.innerHTML=inputs;
 
         this._inputHex=document.getElementById("colorRick_input_hex");
+
+        this._inputOpacity=document.getElementById("colorRick_input_opacity");
+        
+        if(!options.showOpacity) 
+        {
+            this._inputOpacity1=document.getElementById("colorrick_opacity_title");
+            this._inputOpacity1.style.opacity=0.0;
+            this._inputOpacity.style.opacity=0.0;
+        }
 
         this._inputR=document.getElementById("colorRick_input_r");
         this._inputG=document.getElementById("colorRick_input_g");
@@ -210,17 +220,31 @@ class ColorRick
 
         });
 
+        this._inputOpacity.addEventListener("input",(e)=>
+        {
+            const f=parseFloat(this._inputOpacity.value);
+
+            if(f===f)
+            {
+                this._opacity=parseFloat(this._inputOpacity.value);
+                console.log(this._opacity)
+                this.updateColorField();
+            }
+        });
+
+
+
         this._elHue.addEventListener("pointerdown",this._onHueMouse.bind(this));
         this._elHue.addEventListener("pointermove",this._onHueMouse.bind(this));
 
         
-        if(this._elOpacity)this._elOpacity.addEventListener("pointerdown",this._onOpacityMouse.bind(this));
-        if(this._elOpacity)this._elOpacity.addEventListener("pointermove",this._onOpacityMouse.bind(this));
+        if(this._elOpacity) this._elOpacity.addEventListener("pointerdown",this._onOpacityMouse.bind(this));
+        if(this._elOpacity) this._elOpacity.addEventListener("pointermove",this._onOpacityMouse.bind(this));
 
-        this._elOpacity.addEventListener("wheel",(e)=>
+        if(this._elOpacity) this._elOpacity.addEventListener("wheel",(e)=>
         {
-            const speed=0.01;
-            
+            let speed=0.01;
+            if(e.altKey)speed/=3;
             if(e.deltaY>0)this._opacity-=speed;
             else this._opacity+=speed;
     
@@ -228,12 +252,11 @@ class ColorRick
             
             e.preventDefault();
         });
-
         
         this._elHue.addEventListener("wheel",(e)=>
         {
-            const speed=0.2;
-            
+            let speed=0.2;
+            if(e.altKey)speed/=3;
             this._hue=parseFloat(this._hue);
 
             if(e.deltaY>0)this._hue-=speed;
@@ -407,7 +430,7 @@ class ColorRick
         }
 
 
-        
+        if(this._inputOpacity.value!=this._opacity) this._inputOpacity.value=Math.round(this._opacity*10000)/10000;
         this._inputHex.value=this._color.hex();
 
         this._inputR.value=this._color.rgb()[0];
