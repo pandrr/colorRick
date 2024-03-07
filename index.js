@@ -251,7 +251,8 @@ class ColorRick
             this.updateColorField();
             
             e.preventDefault();
-        });
+        },{"passive":false});
+
         
         this._elHue.addEventListener("wheel",(e)=>
         {
@@ -266,8 +267,7 @@ class ColorRick
             this._setColorFromHsvInputs();
             
             e.preventDefault();
-        });
-
+        },{"passive":false});
 
 
         if(this.options.ele)
@@ -306,7 +306,8 @@ class ColorRick
 
             this.updateColorField();
             e.preventDefault();
-        });
+        },{"passive":false});
+
         this._elArea.addEventListener("pointerdown",(e)=> { this._elArea.setPointerCapture(e.pointerId); });
         this._elArea.addEventListener("pointerup",(e)=> { this._elArea.releasePointerCapture(e.pointerId); });
 
