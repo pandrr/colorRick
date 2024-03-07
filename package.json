@@ -1,7 +1,5 @@
 {
   "scripts": {
-    "dev": "parcel index.js index.html",
-    "build": "parcel build index.js index.html"
   },
   "devDependencies": {
     "chroma-js": "^2.1.2",
