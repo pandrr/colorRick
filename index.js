@@ -340,12 +340,7 @@ class ColorRick
 
     setHsvInputs(h,s,v)
     {
-
-        if(parseFloat(h)!=parseFloat(h))
-        {
-            console.log(" NOT A NUMBER")
-            console.log(new Error().stack)
-        }
+        if(parseFloat(h)!=parseFloat(h)) h=0; // when grey
         this._inputH.value=parseFloat(h)||0;
         this._inputS.value=parseFloat(s)||0;
         this._inputV.value=parseFloat(v)||0;
