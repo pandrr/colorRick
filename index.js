@@ -1,8 +1,4 @@
-
-// window.chroma = require("chroma-js");
 const chroma = require("chroma-js");
-// import chroma from "chroma-js";
-
 
 class ColorRick
 {
