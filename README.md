@@ -6,6 +6,24 @@ simple colorpicker without bullshit
 
 used in https://cables.gl
 
-## build
+## Build
 
 `npx webpack`
+
+## Usage
+
+```
+    const cr=new ColorRick(
+        {
+            "ele": element,
+            "color": "#77aa55",
+            "opacity": 1.0,
+            "showOpacity": true,
+            "onChange": (color,opacity)=>
+                {
+                    console.log(color,opacity);
+                }
+        });
+    
+
+```

@@ -7,9 +7,6 @@ class ColorRick
         this._elements=[];
 
         this.options=options;
-
-
-
         this._opacity=options.opacity;
 
         this._areaWidth=256;
