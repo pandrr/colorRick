@@ -299,12 +299,14 @@ class ColorRick
 
             this.updateColorField();
             e.preventDefault();
+
         },{"passive":false});
 
         this._elArea.addEventListener("pointerdown",(e)=> { this._elArea.setPointerCapture(e.pointerId); });
         this._elArea.addEventListener("pointerup",(e)=> { this._elArea.releasePointerCapture(e.pointerId); });
 
-        document.addEventListener("pointerdown",this._clickOutside.bind(this));
+        if(!this.options.noCloseOutside)
+            document.addEventListener("pointerdown",this._clickOutside.bind(this));
 
         this._elColorBoxOrig.addEventListener("click",()=>{
             this.setColor(this._elColorBoxOrig.style.backgroundColor);
@@ -313,6 +315,7 @@ class ColorRick
 
     _clickOutside(e)
     {
+        if(this.options.noCloseOutside)return;
         if(this._elContainer.contains(e.target)) return true;
 
         this.close();
@@ -431,7 +434,8 @@ class ColorRick
 
     close()
     {
-        document.removeEventListener("pointerdown",this._clickOutside.bind(this));
+        if(!this.options.noCloseOutside)
+            document.removeEventListener("pointerdown",this._clickOutside.bind(this));
 
         for(let i=0;i<this._elements.length;i++) this._elements[i].remove();
     }
