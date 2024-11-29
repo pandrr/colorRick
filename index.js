@@ -56,6 +56,19 @@ class ColorRick
         this._elHue.appendChild(this._elHueCursor);
         this._elements.push(this._elHueCursor);
 
+        // eye dropper
+
+        if(window.EyeDropper)
+        {
+            this._elDropper = document.createElement("div");
+            this._elDropper.classList.add("colorRick_eyeDrop");
+            this._elContainer.appendChild(this._elDropper);
+            this._elements.push(this._elDropper);
+    
+        }
+
+
+
         // opacity slider
 
         if(options.showOpacity) 
@@ -88,6 +101,7 @@ class ColorRick
         this._elContainer.appendChild(this._elInputContainer);
         this._elements.push(this._elInputContainer);
 
+        
         let inputs=
             "<table>"+
                 "<tr>"+
@@ -163,6 +177,7 @@ class ColorRick
         this.updateColorField();
 
 
+        
 
         this._inputR.addEventListener("input",(e)=>
         {
@@ -307,6 +322,17 @@ class ColorRick
 
         if(!this.options.noCloseOutside)
             document.addEventListener("pointerdown",this._clickOutside.bind(this));
+
+        if(this._elDropper)
+            this._elDropper.addEventListener("click",()=>
+            {
+                let picker = new EyeDropper().open();
+                picker.then((a) =>
+                {
+                    this._inputHex.value=a.sRGBHex;
+                    this.setColor(this.validateHexInput())
+                });
+        });
 
         this._elColorBoxOrig.addEventListener("click",()=>{
             this.setColor(this._elColorBoxOrig.style.backgroundColor);
