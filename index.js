@@ -1,6 +1,6 @@
-const chroma = require("chroma-js");
+import chroma from "chroma-js";
 
-class ColorRick
+export class ColorRick
 {
     constructor(options)
     {
@@ -511,5 +511,4 @@ class ColorRick
     }
 };
 
-module.exports=ColorRick;
 
